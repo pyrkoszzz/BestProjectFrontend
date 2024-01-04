@@ -25,10 +25,11 @@ function HomePage() {
     });
   }, []);
 
-  var filteredItemsByTags = items.filter(item => selectedTags.includes(item.categoryId))
-  if(selectedTags.length === 0) { filteredItemsByTags = items }
-
-  
+  var filteredItemsByTags = items.filter(
+    item => 
+      item.name.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedTags.includes(item.categoryId) || selectedTags.length === 0)
+  )
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
