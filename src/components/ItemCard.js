@@ -4,7 +4,8 @@ import moment from "moment";
 import DropdownMenu from "./DropdownMenu";
 
 const ItemCard = ({ item, onItemCardClick }) => {
-  const isLost = item.status === "lost";
+  const isLost = !item.flag;
+  const itemStatus = isLost ? "LOST" : "FOUND"
   const statusColor = isLost ? "lostColor" : "foundColor";
   const defaultItemImage =
     "https://img.freepik.com/free-vector/flat-design-image-upload-landing-page_23-2148271993.jpg?w=1800&t=st=1685925210~exp=1685925810~hmac=c462a69438094be95540eb7ab7be30f53e853dcbdd3f4d44f304e7059846b09a";
@@ -34,7 +35,7 @@ const ItemCard = ({ item, onItemCardClick }) => {
           src={
             item.images && item.images[0] ? item.images[0] : defaultItemImage
           }
-          alt={item.title}
+          alt={item.name}
           className="absolute inset-0 w-full h-full rounded-t-lg object-cover"
         />
       </div>
@@ -46,7 +47,7 @@ const ItemCard = ({ item, onItemCardClick }) => {
               className="text-lg font-bold cursor-pointer"
               onClick={() => onItemCardClick(item)}
             >
-              {item.title}
+              {item.name}
             </h3>
             <div className="flex items-center space-x-2">
               <div className="flex items-center opacity-50 text-sm">
@@ -75,7 +76,7 @@ const ItemCard = ({ item, onItemCardClick }) => {
           isLost ? "text-black" : "text-white"
         } text-sm`}
       >
-        {item.status}
+        {itemStatus}
       </div>
     </div>
   );

@@ -15,17 +15,20 @@ function HomePage() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    client.get('/Item/GetFound').then((response) => {
-      setItems(response.data);
-    });
+    const req_found = client.get('/Item/GetFound')
+    const req_lost = client.get('/Item/GetLost')
+    Promise.all([req_found, req_lost]).then((result => {
+      setItems(result[0].data.concat(result[1].data))
+    }))
     client.get('/Category/Get').then((response) => {
-      var tag_arr = []
-      response.data.map((tag) => {
-        tag_arr.push(tag.name)
-      })
-      setTags(tag_arr);
+      setTags(response.data);
     });
   }, []);
+
+  var filteredItemsByTags = items.filter(item => selectedTags.includes(item.categoryId))
+  if(selectedTags.length === 0) { filteredItemsByTags = items }
+
+  
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
@@ -44,11 +47,11 @@ function HomePage() {
     setNumItemsToShow(numItemsToShow + 6);
   };
 
-  const handleTagClick = (tag) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
+  const handleTagClick = (tagId) => {
+    if (selectedTags.includes(tagId)) {
+      setSelectedTags(selectedTags.filter((t) => t !== tagId));
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setSelectedTags([...selectedTags, tagId]);
     }
   };
 
@@ -68,21 +71,21 @@ function HomePage() {
         {tags.map((tag, index) => (
           <div
             key={index}
-            onClick={() => handleTagClick(tag)}
-            className={`inline-flex justify-center items-center gap-1 bg-gray-100 text-sm font-semibold text-gray-700 rounded-full px-4 py-1 max-w-full truncate mr-2 mt-2 ${
-              selectedTags.includes(tag) ? "bg-blue-400 " : "bg-gray-100"
+            onClick={() => handleTagClick(tag.id)}
+            className={`inline-flex justify-center items-center gap-1 text-sm font-semibold text-gray-700 rounded-full px-4 py-1 max-w-full truncate mr-2 mt-2 ${
+              selectedTags.includes(tag.id) ? "bg-blue-400 " : "bg-gray-100"
             }`}
           >
             <HiOutlineHashtag className="w-4 h-4" />
-            {tag}
+            {tag.name}
           </div>
         ))}
       </div>
 
-      {items.length > 0 ? (
+      {filteredItemsByTags.length > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center mx-auto">
-            {items.slice(0, numItemsToShow).map((item) => (
+            {filteredItemsByTags.slice(0, numItemsToShow).map((item) => (
               <ItemCard
                 key={item.id}
                 item={item}
@@ -94,7 +97,7 @@ function HomePage() {
             <ItemDetailCard item={selectedItem} onClose={closeModal} />
           )}
 
-          {items.length > numItemsToShow && (
+          {filteredItemsByTags.length > numItemsToShow && (
             <div className="flex justify-center">
               <button
                 onClick={loadMoreItems}
