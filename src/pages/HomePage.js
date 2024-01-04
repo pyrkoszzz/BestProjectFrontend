@@ -9,7 +9,7 @@ function HomePage() {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [numItemsToShow, setNumItemsToShow] = useState(6);
+  const [numItemsToShow, setNumItemsToShow] = useState(10);
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [items, setItems] = useState([]);
@@ -32,6 +32,8 @@ function HomePage() {
   )
 
   const handleItemClick = (item) => {
+    item["category"] = tags.find(tag => tag.id === item.categoryId)
+    console.log(item.category)
     setSelectedItem(item);
     setIsModalOpen(true);
   };
@@ -85,7 +87,7 @@ function HomePage() {
 
       {filteredItemsByTags.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-items-center mx-auto">
             {filteredItemsByTags.slice(0, numItemsToShow).map((item) => (
               <ItemCard
                 key={item.id}

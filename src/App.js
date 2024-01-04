@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import Home from "./pages/HomePage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import PostNewItemPage from "./pages/PostNewItemPage";
 
 function App() {
   const location = useLocation();
@@ -29,6 +30,10 @@ function App() {
         <Route
           path="/home"
           element={authenticated ? <Home /> : <Navigate to="/signup" />}
+        />
+        <Route
+          path="/post-new-item"
+          element={authenticated ? <PostNewItemPage /> : <Navigate to="/signup" />}
         />
       </Routes>
       {!shouldShowHeaderFooter && <Footer />}
