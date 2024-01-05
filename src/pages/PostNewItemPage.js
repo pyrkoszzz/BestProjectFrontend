@@ -13,7 +13,7 @@ const formReducer = (state, event) => {
       dateLost: "",
       location: "",
       description: "",
-      tags: [],
+      tag: 0,
       images: [],
     };
   }
@@ -43,6 +43,7 @@ function PostNewItemPage() {
   const autocompleteRef = useRef(null);
 
   const handleInputChange = (event) => {
+    console.log(formData)
     setFormData({
       name: event.target.name,
       value: event.target.value,
@@ -87,18 +88,17 @@ function PostNewItemPage() {
       position: toast.POSITION.TOP_CENTER,
       autoClose: 1000,
     });
-    const data = event.target;
     client.post('/Item/CreateFound',
     {
-      "name": data.name,
-      "description": data.description,
-      "categoryId": data.tag,
-      "userId": 0,
+      "name": formData.title,
+      "description": formData.description,
+      "categoryId": formData.tag,
+      "userId": 1,
       "flag": 0,
       "isResolved": false,
       "location": {
-        "latitude": data.location[0],
-        "longitude": data.location[1],
+        "latitude": mapLocation.lat,
+        "longitude": mapLocation.lng,
         "radiusMeters": 50
       },
       // "image": {
