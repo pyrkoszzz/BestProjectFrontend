@@ -6,7 +6,8 @@ import { HiOutlineHashtag } from "react-icons/hi";
 
 function ItemDetailCard({ item, onClose }) {
   const navigate = useNavigate();
-  const isLost = item.status === "lost";
+  const isLost = !item.flag
+  const itemStatus = isLost ? "LOST" : "FOUND"
   const statusColor = isLost ? "lostColor" : "foundColor";
   const defaultImage =
     "https://img.freepik.com/free-vector/flat-design-image-upload-landing-page_23-2148271993.jpg?w=1800&t=st=1685925210~exp=1685925810~hmac=c462a69438094be95540eb7ab7be30f53e853dcbdd3f4d44f304e7059846b09a";
@@ -14,23 +15,9 @@ function ItemDetailCard({ item, onClose }) {
   // const IamTheOwner =
   //   item.user?.uid === JSON.parse(localStorage.getItem("user")).uid;
   const IamTheOwner = false;
-  console.log(item);
 
-  const [year, month, day] = item.dateLost ? item.dateLost.split("-") : [];
-
-  // Rearrange the components in the "day/month/year" format
-  const formattedDate = `${day}/${month}/${year}`;
-
-  useEffect(() => {
-    if (item.datePosted) {
-      const milliseconds = Math.floor(item.datePosted.nanoseconds / 1000000);
-      const date = new Date(item.datePosted.seconds * 1000 + milliseconds); // convert to JavaScript Date object
-      setTimeAgo(moment(date).fromNow()); // convert to relative time string
-    }
-  }, [item.datePosted]);
-
-  const handleChatButton = () => {
-    navigate(`/conversation/${item.user?.uid}`);
+  const handleContactButton = () => {
+    console.log("TODO")
   };
 
   // create a reference for your modal
@@ -66,24 +53,20 @@ function ItemDetailCard({ item, onClose }) {
           <img
             className="w-full h-full object-cover object-center"
             src={item.images && item.images[0] ? item.images[0] : defaultImage}
-            alt={item.title}
+            alt={item.name}
           />
           <div
             className={`uppercase font-bold px-4 py-1 rounded-bl-lg rounded-tr-lg bg-${statusColor} absolute top-0 right-0 ${
               isLost ? "text-black" : "text-white"
             } text-sm`}
           >
-            {item.status}
-          </div>
-          <div className="absolute top-8 right-1 shadow-2xl shadow-white bg-white bg-opacity-60 p-1">
-            <p>on: {formattedDate}</p>
+            {itemStatus}
           </div>
         </div>
         <div className="w-full p-8 sm:w-2/5 md:w-1/2 lg:w-2/5 xl:w-1/3 flex flex-col justify-between">
           <div>
             <div className="flex justify-between items-start">
               <h2 className="text-2xl font-bold mb-2">{item.title}</h2>
-              <p> {timeAgo} </p>
               <button
                 className="absolute top-0 sm:right-0 hidden sm:block bg-lostColor hover:bg-red-700 text-white text-xl font-bold p-2"
                 onClick={onClose}
@@ -92,15 +75,12 @@ function ItemDetailCard({ item, onClose }) {
               </button>
             </div>
             <div className="flex flex-wrap mt-2">
-              {item.tags?.map((tag, index) => (
                 <div
-                  key={index}
                   className="inline-flex justify-center items-center gap-1 bg-gray-100 text-sm font-semibold text-gray-700 rounded-full px-4 py-1 max-w-full truncate mr-2 mt-2"
                 >
                   <HiOutlineHashtag className="w-4 h-4" />
-                  {tag}
+                  {item.category.name}
                 </div>
-              ))}
             </div>
             <div className="mb-4 mt-4 shadow-xl border p-4 sm:w-40 md:w-80 lg:w-96 rounded bg-white bg-opacity-50 overflow-auto max-h-60">
               <p className="text-gray-700">{item.description}</p>
@@ -118,9 +98,9 @@ function ItemDetailCard({ item, onClose }) {
                   className={`${
                     isLost ? "bg-lostColor" : "bg-foundColor"
                   }  text-white font-bold py-2 px-4 rounded w-1/2 min-w-[100px] self-center hover:bg-opacity-80`}
-                  onClick={handleChatButton}
+                  onClick={handleContactButton}
                 >
-                  Chat
+                  Contact!
                 </button>
               )}
             </div>
