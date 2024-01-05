@@ -30,9 +30,11 @@ function PostNewItemPage() {
   const [tags, setTags] = useState([]);
   const navigate = useNavigate();
   const [mapLocation, setMapLocation] = useState({
-    lat: "51.107883",
-    lng: "17.038538",
+    lat: 52.2648957,
+    lng: 20.9282026,
   });
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     client.get('/Category/Get').then((response) => {
@@ -43,7 +45,6 @@ function PostNewItemPage() {
   const autocompleteRef = useRef(null);
 
   const handleInputChange = (event) => {
-    console.log(formData)
     setFormData({
       name: event.target.name,
       value: event.target.value,
@@ -70,9 +71,10 @@ function PostNewItemPage() {
       setFormData({ reset: false });
       setMessage(""); // Reset message
     } else {
-      if (uploadData.url !== null) {
-        setFileData((prevState) => [...prevState, uploadData]);
-        setMessage("File uploaded to database.");
+      if (uploadData.base64 !== null) {
+        console.log(uploadData)
+        setFileData([uploadData]);
+        setMessage("Uploading file to database!");
       } else {
         setFileData((prevState) =>
           prevState.filter((file) => file.file !== uploadData.file)
@@ -88,25 +90,23 @@ function PostNewItemPage() {
       position: toast.POSITION.TOP_CENTER,
       autoClose: 1000,
     });
-    client.post('/Item/CreateFound',
-    {
+    const newItem = {
       "name": formData.title,
       "description": formData.description,
-      "categoryId": formData.tag,
-      "userId": 1,
+      "categoryId": formData.tags[0],
+      "userId": user.id,
       "flag": 0,
       "isResolved": false,
       "location": {
         "latitude": mapLocation.lat,
         "longitude": mapLocation.lng,
-        "radiusMeters": 50
+        "radiusMeters": 800
       },
-      // "image": {
-      //   "fileName": "string",
-      //   "data": "string",
-      //   "item": "string"
-      // }
-    }).then(() => {
+    }
+    console.log(newItem)
+    const api_path = formData.status === 'found' ? 'CreateFound' : 'CreateLost'
+    client.post('/Item/'+api_path, newItem)
+    .then(() => {
       toast.success("Form submitted successfully, redirecting home!", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
@@ -121,6 +121,7 @@ function PostNewItemPage() {
         navigate("/home");
       }, 3000);
     }).catch((e) => {
+      console.log(e)
       toast.error("Error submiting item!", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 3000,
@@ -216,22 +217,25 @@ function PostNewItemPage() {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
-              <div className="mb-4">
+
+              {/* <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="dateLost"
+                  htmlFor="radius"
                 >
-                  Date:
+                  Item Radius:
                 </label>
                 <input
-                  type="date"
-                  id="dateLost"
-                  name="dateLost"
-                  value={formData.dateLost || ""}
+                  type="number"
+                  id="radius"
+                  name="radius"
+                  placeholder="Enter item radius"
+                  value={formData.radius || 50}
                   onChange={handleInputChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
-              </div>
+              </div> */}
+
               <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"

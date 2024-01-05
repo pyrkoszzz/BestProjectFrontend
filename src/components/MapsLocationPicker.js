@@ -11,12 +11,8 @@ const containerStyle = {
   height: "300px",
 };
 
-const center = {
-  lat: 51.107883,
-  lng: 17.038538,
-};
-
 function MapLocationPicker({ mapLocation, setMapLocation, found = true }) {
+  const center = mapLocation
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,

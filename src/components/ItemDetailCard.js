@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import moment from "moment";
 import { HiOutlineHashtag } from "react-icons/hi";
+import MapsLocationPicker from "./MapsLocationPicker";
 
 function ItemDetailCard({ item, onClose }) {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ function ItemDetailCard({ item, onClose }) {
   const defaultImage =
     "https://img.freepik.com/free-vector/flat-design-image-upload-landing-page_23-2148271993.jpg?w=1800&t=st=1685925210~exp=1685925810~hmac=c462a69438094be95540eb7ab7be30f53e853dcbdd3f4d44f304e7059846b09a";
   const IamTheOwner = item.userId === JSON.parse(localStorage.getItem("user")).id;
+
+  const [mapLocation, setMapLocation] = useState(
+    item.location
+  );
 
   const handleContactButton = () => {
     console.log("TODO")
@@ -82,7 +87,13 @@ function ItemDetailCard({ item, onClose }) {
               <p className="text-gray-700">{item.description}</p>
             </div>
           </div>
-
+          <MapsLocationPicker
+            mapLocation={{
+              lat: parseFloat(item.location.latitude),
+              lng: parseFloat(item.location.longitude),
+            }}
+            setMapLocation={setMapLocation}
+          />
           <div className="flex justify-between flex-row-reverse items-center text-sm">
             <div className=" opacity-50">
               <span className="font-semibold ">{item.user?.displayName}</span>

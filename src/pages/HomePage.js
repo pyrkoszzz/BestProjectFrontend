@@ -27,6 +27,7 @@ function HomePage() {
       });
       localStorage.setItem("items", JSON.stringify(all_data));
       setItems(all_data)
+      setTags(tags)
     }))
     
     

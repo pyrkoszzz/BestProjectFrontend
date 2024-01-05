@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
-
 function FileUploader({ onUpload, reset }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const fileInputRef = useRef();
@@ -12,9 +11,17 @@ function FileUploader({ onUpload, reset }) {
     setSelectedFiles([...selectedFiles, ...newFiles]);
 
     for (let file of newFiles) {
-      //add photos
+      const base64File = await toBase64(file);
+      onUpload({ file, base64: base64File });
     }
   };
+
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+});
 
   const removeSelectedImage = async (index) => {
     const fileToRemove = selectedFiles[index];
