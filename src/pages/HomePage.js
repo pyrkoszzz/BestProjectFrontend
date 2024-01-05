@@ -17,12 +17,19 @@ function HomePage() {
   useEffect(() => {
     const req_found = client.get('/Item/GetFound')
     const req_lost = client.get('/Item/GetLost')
-    Promise.all([req_found, req_lost]).then((result => {
-      setItems(result[0].data.concat(result[1].data))
+    const req_tags = client.get('/Category/Get')
+
+    Promise.all([req_found, req_lost, req_tags]).then((result => {
+      var all_data = result[0].data.concat(result[1].data)
+      const tags = result[2].data;
+      all_data.forEach(item => {
+        item["category"] = tags.find(tag => tag.id === item.categoryId).name
+      });
+      localStorage.setItem("items", JSON.stringify(all_data));
+      setItems(all_data)
     }))
-    client.get('/Category/Get').then((response) => {
-      setTags(response.data);
-    });
+    
+    
   }, []);
 
   var filteredItemsByTags = items.filter(
@@ -32,8 +39,7 @@ function HomePage() {
   )
 
   const handleItemClick = (item) => {
-    item["category"] = tags.find(tag => tag.id === item.categoryId)
-    console.log(item.category)
+    
     setSelectedItem(item);
     setIsModalOpen(true);
   };

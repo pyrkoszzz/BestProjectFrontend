@@ -5,14 +5,13 @@ import DropdownMenu from "./DropdownMenu";
 
 const ItemCard = ({ item, onItemCardClick }) => {
   const isLost = !item.flag;
-  const itemStatus = isLost ? "LOST" : "FOUND"
+  const IamTheOwner = item.userId === JSON.parse(localStorage.getItem("user")).id;
+  const ownerString = "(YOU)"
+  var itemStatus = isLost ? "LOST" : "FOUND"
+  itemStatus += IamTheOwner ? " " + ownerString : ""
   const statusColor = isLost ? "lostColor" : "foundColor";
   const defaultItemImage =
     "https://img.freepik.com/free-vector/flat-design-image-upload-landing-page_23-2148271993.jpg?w=1800&t=st=1685925210~exp=1685925810~hmac=c462a69438094be95540eb7ab7be30f53e853dcbdd3f4d44f304e7059846b09a";
-
-  // const IamTheOwner =
-  //   item.user?.uid === JSON.parse(localStorage.getItem("user")).uid;
-  const IamTheOwner = true;
 
   return (
     <div

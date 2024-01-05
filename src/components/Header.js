@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import logo from "../images/logo.svg";
 
 function Header() {
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <nav className="bg-white h-[80px] w-full flex items-center justify-between md:px-[165px] sm:px-[50px] px-[30px]">
       <Link to="/home">
@@ -24,10 +25,7 @@ function Header() {
         </li>
         <li>
           <Link to="/my-account">
-            <img
-              alt="User Profile"
-              className="w-10 h-10 sm:w-[48px] sm:h-[48px] rounded-[12px]"
-            />
+            <p className="font-semibold mx-0">{user?.name}</p>
           </Link>
         </li>
       </ul>

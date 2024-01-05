@@ -21,20 +21,6 @@ function Footer() {
             </li>
           </ul>
         </div>
-        <div>
-          <h4 className="font-bold mb-2">Resources</h4>
-          <ul className="space-y-1">
-            <li>
-              <Link to="/faq">FAQ</Link>
-            </li>
-            <li>
-              <Link to="/terms">Terms of Service</Link>
-            </li>
-            <li>
-              <Link to="/privacy">Privacy Policy</Link>
-            </li>
-          </ul>
-        </div>
       </div>
     </footer>
   );

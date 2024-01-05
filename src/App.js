@@ -6,12 +6,14 @@ import Home from "./pages/HomePage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PostNewItemPage from "./pages/PostNewItemPage";
+import AuthPage from "./pages/AuthPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import MyAccount from "./pages/MyAccountPage";
 
 function App() {
   const location = useLocation();
-  // const user = JSON.parse(localStorage.getItem("user"));
-  // const [authenticated, setAuthenticated] = useState(user ? true : false);
-  const [authenticated, setAuthenticated] = useState(true);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [authenticated, setAuthenticated] = useState(user ? true : false);
   const shouldShowHeaderFooter = (
     location.pathname === "/login" ||
     location.pathname === "/signup" ||
@@ -25,8 +27,17 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={authenticated ? <Home /> : <Navigate to="/signup" />}
+          element={authenticated ? <Navigate to="/home" /> : <Navigate to="/signup" />}
         />
+        <Route
+          path="/login"
+          element={authenticated ? <Navigate to="/home" /> : <AuthPage setAuthenticated={setAuthenticated} />}
+        />
+        <Route
+          path="/signup"
+          element={authenticated ? <Navigate to="/home" /> : <AuthPage setAuthenticated={setAuthenticated} />}
+        />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route
           path="/home"
           element={authenticated ? <Home /> : <Navigate to="/signup" />}
@@ -34,6 +45,10 @@ function App() {
         <Route
           path="/post-new-item"
           element={authenticated ? <PostNewItemPage /> : <Navigate to="/signup" />}
+        />
+         <Route
+          path="/my-account"
+          element={authenticated ? <MyAccount setAuthenticated={setAuthenticated}/> : <Navigate to="/signup" />}
         />
       </Routes>
       {!shouldShowHeaderFooter && <Footer />}
